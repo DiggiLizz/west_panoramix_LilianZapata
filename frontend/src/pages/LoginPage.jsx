@@ -1,26 +1,48 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import AuthForm from '../components/AuthForm'; 
+import { validateEmail } from '../utils/validation';
+import { signInWithGoogle } from '../services/firebase'; 
 import './LoginPage.css'; 
 
 const LoginPage = () => {
-  const { user, login, loading, error } = useAuth();
+  const { user, login, loading, error: authError } = useAuth();
+  const [localError, setLocalError] = useState('');
   const navigate = useNavigate();
 
-  // si el usuario ya inicio sesion, lo llevo al dashboard
+  // 1. cuando el usuario exista, lo envio a la pagina de bienvenida (el paso previo obligatorio)
   useEffect(() => {
-    if (user) navigate('/dashboard');
+    if (user) {
+      navigate('/welcome');
+    }
   }, [user, navigate]);
 
+  // 2. logica de login tradicional que implemento
   const handleLoginSubmit = async (email, password) => {
-    // ejecuto el login usando la funcion del hook
+    setLocalError('');
+    if (!validateEmail(email)) {
+      return setLocalError('por favor ingresa un correo con formato valido.');
+    }
     const result = await login(email, password);
-    // si el login es exitoso, redirecciono
     if (result.success) {
-      navigate('/dashboard'); 
+      navigate('/welcome'); 
     }
   };
+
+  // 3. logica para manejar el login de google
+  const handleGoogleLogin = async () => {
+    try {
+      setLocalError('');
+      await signInWithGoogle();
+      // al tener el listener en useauth, el useeffect superior detectara al usuario y navegara solo
+    } catch (err) {
+      console.error("error en firebase:", err);
+      setLocalError('error al iniciar sesion con google.');
+    }
+  };
+
+  const displayError = localError || authError;
 
   return (
     <div className="loginContainer">
@@ -30,11 +52,22 @@ const LoginPage = () => {
         {/* formulario de autenticacion */}
         <AuthForm onSubmit={handleLoginSubmit} isLoading={loading} />
         
-        {/* mensaje de error si algo falla */}
-        {error && <div className="loginErrorBox" style={{color: 'red'}}>{error}</div>}
+        {/* boton de google que conecta con la nube */}
+        <button onClick={handleGoogleLogin} className="googleButton">
+          ingresar con google
+        </button>
         
-        {/* enlace para registro */}
-        <Link to="/register">no tienes cuenta? registrate</Link>
+        {/* caja de error unificada */}
+        {displayError && (
+          <div className="loginErrorBox" style={{color: 'red', marginTop: '10px', textAlign: 'center'}}>
+            {displayError}
+          </div>
+        )}
+        
+        {/* enlace de registro */}
+        <div style={{ marginTop: '15px', textAlign: 'center' }}>
+          <Link to="/register">no tienes cuenta? registrate</Link>
+        </div>
       </div>
     </div>
   );

@@ -8,12 +8,19 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState(''); 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMsg(''); 
+
+    // valido la fortaleza basica de la contraseña
+    if (password.length < 6) {
+      return setError('la contraseña debe tener al menos 6 caracteres.');
+    }
 
     // valido que las contraseñas coincidan
     if (password !== confirmPassword) {
@@ -26,8 +33,9 @@ const RegisterPage = () => {
       const response = await apiClient.post('/register', { email, password });
       
       if (response.ok) {
-        alert('registro exitoso. ahora inicia sesion.');
-        navigate('/login');
+        // muestro mensaje amigable en la interfaz y espero 2 segundos para redirigir
+        setSuccessMsg('registro exitoso. redirigiendo al login...');
+        setTimeout(() => navigate('/login'), 2000);
       } else {
         setError(response.data?.message || 'error al registrar.');
       }
@@ -60,7 +68,7 @@ const RegisterPage = () => {
           <div className="registerInputGroup">
             <input 
               type="password" 
-              placeholder="contraseña" 
+              placeholder="contraseña (min. 6 caracteres)" 
               className="registerInput"
               onChange={(e) => setPassword(e.target.value)} 
               required 
@@ -87,8 +95,9 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        {/* caja de error */}
+        {/* caja de error y exito visuales */}
         {error && <p style={{color: 'red', marginTop: '10px'}}>{error}</p>}
+        {successMsg && <p style={{color: 'green', marginTop: '10px'}}>{successMsg}</p>}
         
         <div className="registerLoginLinkContainer">
           <Link to="/login" className="registerLoginLink">ya tienes cuenta? inicia sesion</Link>

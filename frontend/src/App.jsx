@@ -6,22 +6,33 @@ import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import WelcomePage from './pages/WelcomePage'; 
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-    // envuelvo todo con el proveedor de autenticacion
+    // envuelvo toda la aplicacion con el proveedor de autenticacion
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* redireccion inicial */}
+          {/* redireccion inicial: si entro a la raiz, mando a login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           
-          {/* rutas publicas */}
+          {/* rutas publicas que no requieren sesion */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           
-          {/* ruta protegida para el dashboard */}
+          {/* ruta de bienvenida: protegida, requiere usuario logueado */}
+          <Route 
+            path="/welcome" 
+            element={
+              <ProtectedRoute>
+                <WelcomePage />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* ruta del dashboard: protegida, requiere usuario logueado */}
           <Route 
             path="/dashboard" 
             element={
@@ -31,7 +42,7 @@ function App() {
             } 
           />
           
-          {/* manejo de rutas no definidas */}
+          {/* manejo de rutas no definidas: redirecciono a login por seguridad */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

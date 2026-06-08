@@ -1,13 +1,13 @@
+import { signOut } from "firebase/auth"; 
+import { auth } from './firebase';      
 import { apiClient } from '../services/apiClient';
 
 /**
  * servicio para iniciar sesion.
- * envia las credenciales y devuelve el token de autenticacion.
  */
 export const login = async (email, password) => {
   const response = await apiClient.post('/login', { email, password });
   
-  // si el login es exitoso, guardo el token en el almacenamiento local
   if (response.ok && response.data?.session_token) {
     localStorage.setItem('authToken', response.data.session_token);
   }
@@ -18,7 +18,15 @@ export const login = async (email, password) => {
 /**
  * servicio para cerrar sesion.
  */
-export const logout = () => {
-  // elimino el token para cerrar la sesion
-  localStorage.removeItem('authToken');
+export const logout = async () => { 
+  try {
+    // cierra sesion en firebase
+    await signOut(auth);
+  } catch (error) {
+    console.error("error al cerrar sesion en firebase:", error);
+  } finally {
+    // elimina tokens y datos locales
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole'); 
+  }
 };

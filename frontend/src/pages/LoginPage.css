@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #0f172a; /* Fondo azul oscuro moderno */
+  background-color: #0f172a;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
 }
@@ -11,7 +11,7 @@
 .loginCard {
   background-color: #ffffff;
   padding: 40px;
-  border-radius: 12px; /* Corrección aquí: guion en lugar de camelCase */
+  border-radius: 12px; /* Corregido a sintaxis estándar */
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
@@ -40,4 +40,22 @@
   font-size: 14px;
   text-align: left;
   border: 1px solid #fecaca;
+}
+
+/* Agregamos el botón de Google para que sea consistente */
+.googleButton {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.googleButton:hover {
+  background-color: #357ae8;
 }

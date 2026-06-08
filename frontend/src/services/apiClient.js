@@ -14,9 +14,9 @@ export const apiClient = {
       },
     };
 
-    // si tengo un token, lo agrego a los headers
+    // si tengo un token, lo agrego a los headers usando el estandar
     if (token) {
-      config.headers['Authorization'] = `bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
 
     try {

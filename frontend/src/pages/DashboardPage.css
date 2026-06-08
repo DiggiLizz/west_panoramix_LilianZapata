@@ -4,31 +4,41 @@
   background-color: #0f172a; 
   font-family: 'Segoe UI', sans-serif;
   color: #f8fafc;
+  overflow-x: hidden; /* evita scroll horizontal */
 }
 
 /* Navbar */
 .dashNavbar {
   background: #1e293b;
   border-bottom: 1px solid #334155;
-  padding: 1rem 2rem;
+  padding: 1rem; /* reducido de 2rem a 1rem para móviles */
   display: flex;
+  flex-wrap: wrap; /* permite que el selector baje si no hay espacio */
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
-/* Contenedor principal para centrar contenido */
+/* Contenedor principal */
 .dashMain {
   max-width: 900px;
-  margin: 2rem auto;
+  margin: 1rem auto; /* reducido margen vertical */
   padding: 0 1rem;
 }
 
-/* El Grid que soluciona tu problema de las cajas */
+/* EL GRID RESPONSIVO */
 .dashGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
-  gap: 20px; /* Espacio entre tarjetas */
-  margin-top: 2rem;
+  grid-template-columns: 1fr; /* 1 columna por defecto en móviles */
+  gap: 20px;
+  margin-top: 1.5rem;
+}
+
+/* Para pantallas desde 768px hacia arriba (tablets/pc) */
+@media (min-width: 768px) {
+  .dashGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en pantallas grandes */
+  }
 }
 
 /* Estilo de las Tarjetas */
@@ -42,7 +52,7 @@
 }
 
 .dashCard:hover {
-  border-color: #475569; /* Un brillo sutil al pasar el mouse */
+  border-color: #475569;
 }
 
 /* Ajustes de texto */
@@ -50,7 +60,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-top: 10px;
-  color: #fbbf24; /* Un toque de color (amarillo suave) para diferenciar datos */
+  color: #fbbf24;
 }
 
 .dashCodeText {
@@ -61,4 +71,16 @@
   border-radius: 4px;
   display: inline-block;
   margin-top: 10px;
+  word-break: break-all; /* evita que un ID largo rompa el diseño */
+}
+
+/* Estilo especifico para el técnico */
+.dashCard.tecnico {
+  background-color: #eff6ff !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+.dashCard.tecnico h3, 
+.dashCard.tecnico p {
+  color: #1e293b !important;
 }
